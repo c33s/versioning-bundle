@@ -86,6 +86,11 @@ class VersionExtension extends \Twig_Extension implements \Twig_Extension_Global
         return $this->builder->__toString();
     }
 
+    /**
+     * Exchanges the substring in the build which starts with $prefixBuild with the link given in 
+     * $urlBuild. Same for $prefixCommit & $urlCommit
+     *
+     */
     public function getVersionGitlab($urlBuild, $urlCommit, $prefixBuild='id-', $prefixCommit='sha-')
     {
         return $this->getMajorVersion()
