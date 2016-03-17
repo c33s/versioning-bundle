@@ -93,11 +93,16 @@ class VersionExtension extends \Twig_Extension implements \Twig_Extension_Global
      */
     public function getVersionGitlab($urlBuild, $urlCommit, $prefixBuild='id-', $prefixCommit='sha-')
     {
-        return $this->getMajorVersion()
+        $version = $this->getMajorVersion()
             .'.'.$this->getMinorVersion()
             .'.'.$this->getPatchVersion()
             .'.'.$this->getPreReleaseVersion()
-            .'.'.$this->getLinkedBuildVersion($urlBuild, $urlCommit, $prefixBuild, $prefixCommit);
+            .'.'.$this->getLinkedBuildVersion($urlBuild, $urlCommit, $prefixBuild, $prefixCommit)
+        ;
+
+        $version = str_replace('..', '.', $version);
+
+        return $version;
     }
 
     public function getMajorVersion()
