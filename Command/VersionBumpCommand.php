@@ -72,17 +72,21 @@ class VersionBumpCommand extends ContainerAwareCommand
                 $builder->incrementPatch(intval($input->getOption('patch')));
             }
 
-            $preRelease = $input->getOption('prerelease');
-            if (!is_array($preRelease)) {
-                $preRelease = explode('.', $preRelease);
+            if ($input->hasParameterOption('--prerelease')) {
+                $preRelease = $input->getOption('prerelease');
+                if (!is_array($preRelease)) {
+                    $preRelease = explode('.', $preRelease);
+                }
+                $builder->setPreRelease($preRelease);
             }
-            $builder->setPreRelease($preRelease);
 
-            $build = $input->getOption('build');
-            if (!is_array($build)) {
-                $build = explode('.', $build);
+            if ($input->hasParameterOption('--build')) {
+                $build = $input->getOption('build');
+                if (!is_array($build)) {
+                    $build = explode('.', $build);
+                }
+                $builder->setBuild($build);
             }
-            $builder->setBuild($build);
 
             $version = $builder->getVersion();
 
