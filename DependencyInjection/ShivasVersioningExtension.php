@@ -24,6 +24,8 @@ class ShivasVersioningExtension extends Extension
 
         $container->setParameter('shivas_versioning.version_parameter', $config['version_parameter']);
         $container->setParameter('shivas_versioning.version_file', $config['version_file']);
+        $container->setParameter('shivas_versioning.build_url', $config['build_url']);
+        $container->setParameter('shivas_versioning.commit_url', $config['commit_url']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');

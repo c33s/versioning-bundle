@@ -22,6 +22,12 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('version_file')
                     ->defaultValue('parameters.yml')
                 ->end()
+                ->scalarNode('build_url')
+                    ->defaultValue(null)
+                ->end()
+                ->scalarNode('commit_url')
+                    ->defaultValue(null)
+                ->end()
             ->end();
 
         return $treeBuilder;

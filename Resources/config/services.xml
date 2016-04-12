@@ -35,6 +35,8 @@
                  class="%shivas_versioning.twig.class%"
                  public="false">
             <argument type="service" id="shivas_versioning.manager"/>
+            <argument>%shivas_versioning.build_url%</argument>
+            <argument>%shivas_versioning.commit_url%</argument>
             <tag name="twig.extension" />
         </service>
     </services>

@@ -22,13 +22,26 @@ class VersionExtension extends \Twig_Extension implements \Twig_Extension_Global
     protected $versioningManager;
 
     /**
+     * @var string
+     */
+    protected $urlBuild;
+
+    /**
+     * @var string
+     */
+    protected $urlCommit;
+
+    /**
      * VersionExtension constructor.
      *
      * @param $versioningManager VersionsManager
      */
-    public function __construct(VersionsManager $versioningManager)
+    public function __construct(VersionsManager $versioningManager, $urlBuild, $urlCommit)
     {
         $this->versioningManager = $versioningManager;
+        $this->urlBuild = $urlBuild;
+        $this->urlCommit = $urlCommit;
+
         $version = $versioningManager->getVersion();
         $this->builder = Parser::toBuilder(Dumper::toString($version));
     }
@@ -47,8 +60,16 @@ class VersionExtension extends \Twig_Extension implements \Twig_Extension_Global
         );
     }
 
-    public function getLinkedBuildVersion($urlBuild, $urlCommit, $prefixBuild='id-', $prefixCommit='sha-',  $length=8)
+    public function getLinkedBuildVersion($urlBuild = null, $urlCommit = null, $prefixBuild='id-', $prefixCommit='sha-',  $length=8)
     {
+        if ($urlBuild === null) {
+            $urlBuild = $this->urlBuild;
+        }
+
+        if ($urlCommit === null) {
+            $urlCommit= $this->urlCommit;
+        }
+
         $buildParts = $this->builder->getBuild();
         $build = array();
 
@@ -74,6 +95,10 @@ class VersionExtension extends \Twig_Extension implements \Twig_Extension_Global
             $build[] = $buildPart;
         }
 
+        if (empty($build)) {
+            return '';
+        }
+
         return implode('.',$build);
     }
 
@@ -91,14 +116,25 @@ class VersionExtension extends \Twig_Extension implements \Twig_Extension_Global
      * $urlBuild. Same for $prefixCommit & $urlCommit
      *
      */
-    public function getVersionGitlab($urlBuild, $urlCommit, $prefixBuild='id-', $prefixCommit='sha-')
+    public function getVersionGitlab($urlBuild = null, $urlCommit = null, $prefixBuild='id-', $prefixCommit='sha-')
     {
-        $version = $this->getMajorVersion()
-            .'.'.$this->getMinorVersion()
-            .'.'.$this->getPatchVersion()
-            .'.'.$this->getPreReleaseVersion()
-            .'.'.$this->getLinkedBuildVersion($urlBuild, $urlCommit, $prefixBuild, $prefixCommit)
-        ;
+        $major = $this->getMajorVersion();
+        $minor = $this->getMinorVersion();
+        $patch = $this->getPatchVersion();
+        $release = $this->getPreReleaseVersion();
+        $linkedBuild = $this->getLinkedBuildVersion($urlBuild, $urlCommit, $prefixBuild, $prefixCommit);
+
+        $version = '';
+        $version .= $major;
+        $version .= '.'.$minor;
+        $version .= '.'.$patch;
+
+        if ($release !== '') {
+            $version .= '.'.$release;
+        }
+        if ($linkedBuild !== '') {
+            $version .= '.'.$linkedBuild;
+        }
 
         $version = str_replace('..', '.', $version);
 
